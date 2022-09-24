@@ -7,6 +7,15 @@ This tag template won't be for everyone. This template is geared more toward GTM
 ## What it does
 
 1. Loads the gtag.js library
-2. Registers an arguments queue on the the default `dataLayer` global. **Please note** - Google's Sandboxed Javascript doesn't allow for the ability to customize what global variable is used for the arguments queue. If you need to specify an non-default dataLayer global, you will need to edit the template file `dataLayerName` constant to your needs.
+2. Registers an arguments queue on the the default `dataLayer` global.
 3. Implements a better UI that accepts a variable that returns a JavaScript object with the fields you want to set. This object will be merged with any additional fields you set via a normal key:value table. Any object key conflicts will always use the explicitly defined value in the key:value table.
-4. Implements a better UI for setting GA4 tags to specific groups for use with the `gtag()` groups and routes API. This can greatly reduce tag duplication when sending data to more than one measurement ID for more complex implementations.
+4. (Experimental) Implements a better UI for setting GA4 tags to specific groups for use with the `gtag()` groups and routes API. This can greatly reduce tag duplication when sending data to more than one measurement ID for more complex implementations.
+5. (Experimental) Provides simple UI to add common values to the event payload without explictly defining them.
+
+## Limitations
+
+### dataLayer
+Google's Sandboxed Javascript doesn't allow for the ability to customize what global variable is used for the arguments queue. If you need to specify an non-default dataLayer global, you will need to edit the template file `dataLayerName` constant to your needs.
+
+### gtag.js is loaded from www.googletagmanager.com
+Google's Sandboxed Javascript doesn't allow for the ability to customize what domain and path is used to loag the `gtag.js` library. If you wish to load the `gtag.js` file in a non-default way (e.g. proxy through a SGTM container or other 1st party means) you will need to edit the template file at this time.
