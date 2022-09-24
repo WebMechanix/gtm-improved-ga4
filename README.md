@@ -8,7 +8,7 @@ This tag template won't be for everyone. This template is geared more toward GTM
 
 1. Loads the gtag.js library
 2. Registers an arguments queue on the the default `dataLayer` global.
-3. Implements a better UI that accepts a variable that returns a JavaScript object with the fields you want to set. This object will be merged with any additional fields you set via a normal key:value table. Any object key conflicts will always use the explicitly defined value in the key:value table.
+3. Implements a better UI that accepts a variable that returns a JavaScript object with the fields/parameters/properties you want to set for either a config or event tag type. This object will be merged with any additional fields you set via a normal key:value table. Any object key conflicts will always use the explicitly defined value in the key:value table.
 4. (Experimental) Implements a better UI for setting GA4 tags to specific groups for use with the `gtag()` groups and routes API. This can greatly reduce tag duplication when sending data to more than one measurement ID for more complex implementations.
 5. (Experimental) Provides simple UI to add common values to the event payload without explictly defining them.
 
