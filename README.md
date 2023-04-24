@@ -19,3 +19,6 @@ Google's Sandboxed Javascript doesn't allow for the ability to customize what gl
 
 ### gtag.js is loaded from www.googletagmanager.com
 Google's Sandboxed Javascript doesn't allow for the ability to customize what domain and path is used to loag the `gtag.js` library. If you wish to load the `gtag.js` file in a non-default way (e.g. proxy through a SGTM container or other 1st party means) you will need to edit the template file at this time.
+
+### Built-in consent checks
+This tag template has not yet been adjusted to use built in consent checks for things like consent-mode that the default GA4 tag templates do.
