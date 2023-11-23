@@ -15,4 +15,4 @@ This tag template won't be for everyone. This template is geared more toward GTM
 ## Limitations
 
 ### gtag.js is loaded from www.googletagmanager.com
-Google's Sandboxed Javascript doesn't allow for the ability to customize what domain and path is used to loag the `gtag.js` library. If you wish to load the `gtag.js` file in a non-default way (e.g. proxy through a SGTM container or other 1st party means) you will need to edit the template file at this time.
+Google's Sandboxed Javascript doesn't allow for the ability to customize what domain and path is used to load the `gtag.js` library. If you wish to load the `gtag.js` file in a non-default way (e.g. proxy through a SGTM container or other 1st party hostname) you will need to edit the template file at this time.
