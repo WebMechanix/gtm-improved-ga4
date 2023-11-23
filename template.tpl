@@ -54,26 +54,6 @@ ___TEMPLATE_PARAMETERS___
       {
         "type": "NON_EMPTY"
       }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "type",
-        "paramValue": "config",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "TEXT",
-    "name": "eventName",
-    "displayName": "Event Name",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "type",
-        "paramValue": "event",
-        "type": "EQUALS"
-      }
     ]
   },
   {
@@ -91,66 +71,15 @@ ___TEMPLATE_PARAMETERS___
     "defaultValue": true
   },
   {
-    "type": "CHECKBOX",
-    "name": "enableConstants",
-    "checkboxText": "Automatically add helpful globals to all events?",
+    "type": "TEXT",
+    "name": "eventName",
+    "displayName": "Event Name",
     "simpleValueType": true,
-    "defaultValue": false
-  },
-  {
-    "type": "GROUP",
-    "name": "constants",
-    "displayName": "Constants",
-    "groupStyle": "NO_ZIPPY",
-    "subParams": [
-      {
-        "type": "CHECKBOX",
-        "name": "containerId",
-        "checkboxText": "GTM Container ID",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "type",
-            "paramValue": "config",
-            "type": "EQUALS"
-          }
-        ],
-        "help": "Attached as an \u003cstrong\u003econtainer_id\u003c/strong\u003e parameter."
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "containerVersion",
-        "checkboxText": "GTM Container Version",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "type",
-            "paramValue": "config",
-            "type": "EQUALS"
-          }
-        ],
-        "help": "Attached as an \u003cstrong\u003econtainer_version\u003c/strong\u003e parameter."
-      },
-      {
-        "type": "CHECKBOX",
-        "name": "timestamp",
-        "checkboxText": "Timestamp",
-        "simpleValueType": true,
-        "enablingConditions": [
-          {
-            "paramName": "type",
-            "paramValue": "event",
-            "type": "EQUALS"
-          }
-        ],
-        "help": "Attached as an \u003cstrong\u003eevent_timestamp\u003c/strong\u003e parameter."
-      }
-    ],
     "enablingConditions": [
       {
-        "paramName": "enableConstants",
-        "paramValue": false,
-        "type": "NOT_EQUALS"
+        "paramName": "type",
+        "paramValue": "event",
+        "type": "EQUALS"
       }
     ]
   },
@@ -312,100 +241,6 @@ ___TEMPLATE_PARAMETERS___
         ]
       }
     ]
-  },
-  {
-    "type": "GROUP",
-    "name": "groupAssignment",
-    "displayName": "Assign to Google Tag Groups",
-    "groupStyle": "ZIPPY_OPEN_ON_PARAM",
-    "subParams": [
-      {
-        "type": "LABEL",
-        "name": "gtagGroupText",
-        "displayName": "If you are running multiple Improved GA4 config tags on a page, you can assign them to specific groups to have better control over where data is sent with other Improved GA4 event tags. See: \u003ca href\u003d\"https://developers.google.com/tag-platform/gtagjs/routing\"\u003ehttps://developers.google.com/tag-platform/gtagjs/routing\u003c/a\u003e. \u003cstrong\u003eTags are automatically added to the \"default\" group.\u003c/strong\u003e"
-      },
-      {
-        "type": "SIMPLE_TABLE",
-        "name": "gtagGroups",
-        "displayName": "",
-        "simpleTableColumns": [
-          {
-            "defaultValue": "",
-            "displayName": "",
-            "name": "name",
-            "type": "TEXT",
-            "isUnique": true,
-            "valueValidators": [
-              {
-                "type": "NON_EMPTY"
-              },
-              {
-                "type": "REGEX",
-                "args": [
-                  "[a-zA-Z_\\-0-9]+"
-                ]
-              }
-            ]
-          }
-        ],
-        "newRowButtonText": "Add group",
-        "help": ""
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "type",
-        "paramValue": "config",
-        "type": "EQUALS"
-      }
-    ]
-  },
-  {
-    "type": "GROUP",
-    "name": "destinations",
-    "displayName": "Send to Specific Tags or Groups",
-    "groupStyle": "ZIPPY_OPEN_ON_PARAM",
-    "subParams": [
-      {
-        "type": "LABEL",
-        "name": "destinationsGroupText",
-        "displayName": "You may specify one or more destinations for this event data to be sent. These can be tag IDs or groups as defined inside your Improved GA4 config tag types. By default events will be sent to all tags configured on the page."
-      },
-      {
-        "type": "SIMPLE_TABLE",
-        "name": "sendTo",
-        "displayName": "",
-        "simpleTableColumns": [
-          {
-            "defaultValue": "",
-            "displayName": "",
-            "name": "name",
-            "type": "TEXT",
-            "isUnique": true,
-            "valueValidators": [
-              {
-                "type": "NON_EMPTY"
-              },
-              {
-                "type": "REGEX",
-                "args": [
-                  "[a-zA-Z_\\-0-9]+"
-                ]
-              }
-            ]
-          }
-        ],
-        "newRowButtonText": "Add destination",
-        "help": ""
-      }
-    ],
-    "enablingConditions": [
-      {
-        "paramName": "type",
-        "paramValue": "event",
-        "type": "EQUALS"
-      }
-    ]
   }
 ]
 
@@ -418,59 +253,113 @@ const getContainerVersion = require('getContainerVersion');
 const getTimestampMillis = require('getTimestampMillis');
 const getType = require('getType');
 const injectScript = require('injectScript');
-const JSON = require('JSON');
 const log = require('logToConsole');
 const makeTableMap = require('makeTableMap');
-const createQueue = require('createQueue');
-
-/* START CODE */
 
 log('Improved GA4 - data: ', data);
 
-const namespace = 'gtag';
-const dataLayerName = 'dataLayer';
-const GTM = getContainerVersion();
+const namespace = 'improvedGA4';
+const dataLayer = namespace + 'dataLayer';
 
-const dataLayerPush = createQueue(dataLayerName);
+/**
+ * Gtag script definition.
+ * If you want to load gtag from your own 1st party domain, 
+ * you can change the hostname and path here.
+ */
+const script = {
+  hostname: 'www.googletagmanager.com',
+  path: '/gtag/js',
+  parameters: {
+    id: data.measurementId,
+    l: dataLayer,
+  }
+};
 
+/**
+ * Turns an object literal into a query string
+ * @param object obj 
+ * @returns string
+ */
+const objectToQueryString = (obj) => {
+  
+  let queryString = [];
+  
+  for(let prop in obj) {
+    if (!obj.hasOwnProperty(prop)) continue;
+    queryString.push(prop + '=' + obj[prop]);
+  }
+  
+  return '?' + queryString.join('&');
+  
+};
+
+/**
+ * Merges two object literals together (non-recursively).
+ *
+ * @param object obj - The object to merge into.
+ * @param object obj2 - The object to merge from.
+ * @return object
+ */
 const mergeObj = (obj, obj2) => {
+  
   for (let key in obj2) {
     if (obj2.hasOwnProperty(key)) {
       obj[key] = obj2[key];
     }
   }
+  
   return obj;
+
 };
 
+
+/**
+ * Merges settings from two table maps into an object literal.
+ * @returns object
+ */
 const mergeSettings = (fromVar, tableKey) => {
+  
   const defaults = getType(data[fromVar]) === 'object' ? data[fromVar] : {};
   const overrides = data[tableKey] && data[tableKey].length ? makeTableMap(data[tableKey], 'name', 'value') : {};
+  
   return mergeObj(defaults, overrides);
+
 };
 
-const getGlobal = () => {
+
+/**
+ * Checks for existence of gtag global command queue.
+ * If it already exists, it is returned. If it doesn't exist it is created and then returned.
+ */
+const getOrSetGtagGlobal = () => {
   
   let gtag = copyFromWindow(namespace);
   
   if (gtag) 
     return gtag;
   
-  gtag = createArgumentsQueue(namespace, dataLayerName);
-  gtag('js', getTimestampMillis()/1000);
+  gtag = createArgumentsQueue(namespace, dataLayer);
+  
+  gtag('js', {
+    getTime: () => { return getTimestampMillis()/1000; }
+  });
   
   return gtag;
   
 };
 
-const gtag = getGlobal();
+const gtag = getOrSetGtagGlobal();
 
 const userProperties = mergeSettings('userPropertiesFromVariable', 'userPropertiesList');
-log('Improved GA4 - userProperties: ', userProperties);
 
+log('Improved GA4 - userProperties: ', userProperties);
 
 if (data.type == 'config') {
   
   const fields = mergeSettings('fieldsFromVariable', 'fieldsList');
+  
+  if (fields._clear)
+    fields._clear = undefined;
   
   fields.send_page_view = data.sendPageView;
   
@@ -485,6 +374,8 @@ if (data.type == 'config') {
   }
   
   if (data.enableConstants) {
+
+    const GTM = getContainerVersion();
     
     if (data.containerId)
       fields.container_id = GTM.containerId;
@@ -498,19 +389,16 @@ if (data.type == 'config') {
   
   gtag('config', data.measurementId, fields);
   
-  log(fields);
-  
-  /*gtag('get', data.measurementId, 'session_id', function(field) {
-    dataLayerPush({
-      session_id: field
-    });
-  });*/
+  log('Improved GA4 - config data: ', fields);
   
 }
 
 if (data.type == 'event') {
   
   const parameters = mergeSettings('parametersFromVariable', 'parametersList');
+  
+  //if (parameters._clear)
+    //parameters._clear = undefined;
   
   if (data.sendTo) {
     
@@ -523,7 +411,7 @@ if (data.type == 'event') {
   }
   
   if (data.enableConstants) {
-      
+    
     if (data.timestamp)
       parameters.event_timestamp = getTimestampMillis();
     
@@ -537,9 +425,7 @@ if (data.type == 'event') {
   
 }
 
-const scriptUrl = 'https://www.googletagmanager.com/gtag/js?id=' + data.measurementId + '&l=' + dataLayerName + '&cx=c';
-
-injectScript(scriptUrl, data.gtmOnSuccess, data.gtmOnFailure, namespace);
+injectScript('https://' + script.hostname + script.path + objectToQueryString(script.parameters), data.gtmOnSuccess, data.gtmOnFailure, namespace);
 
 data.gtmOnSuccess();
 
@@ -582,7 +468,7 @@ ___WEB_PERMISSIONS___
                 "mapValue": [
                   {
                     "type": 1,
-                    "string": "gtag"
+                    "string": "improvedGA4"
                   },
                   {
                     "type": 8,
@@ -621,7 +507,7 @@ ___WEB_PERMISSIONS___
                 "mapValue": [
                   {
                     "type": 1,
-                    "string": "dataLayer"
+                    "string": "improvedGA4dataLayer"
                   },
                   {
                     "type": 8,
@@ -711,4 +597,4 @@ scenarios: []
 
 ___NOTES___
 
-Created on 9/23/2022, 6:50:37 PM
+Created on 11/23/2023, 7:51:37 AM
